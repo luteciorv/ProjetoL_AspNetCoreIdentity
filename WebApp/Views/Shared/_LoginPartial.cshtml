@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> _signInManager;
+
+@if(_signInManager.IsSignedIn(User))
+{
+    <ul class="nav-item">
+        <form method="post" asp-controller="Account" asp-action="Logout">
+            <input type="submit" style="width: auto;" class="nav-link btn btn-link py-0" value="Sair"/>
+        </form>
+    </ul>
+}
+else
+{
+    <ul class="nav-item">
+        <a class="nav-link" asp-controller="Account" asp-action="Register">Cadastrar usuário</a>
+    </ul>
+    <ul class="nav-item">
+        <a class="nav-link" asp-controller="Account" asp-action="Login">Acessar</a>
+    </ul>
+}

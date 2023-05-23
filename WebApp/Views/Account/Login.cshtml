@@ -1,0 +1,35 @@
+﻿@model WebApp.ViewModels.Account.LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h3>Login</h3>
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div>
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="RememberMe" class="form-label">
+                    <input asp-for="RememberMe" class="form-check" />
+                    @Html.DisplayNameFor(l => l.RememberMe)
+                </label>
+            </div>
+
+            <input type="submit" class="btn btn-outline-primary" value="Acessar" />
+        </form>
+    </div>
+</div>
