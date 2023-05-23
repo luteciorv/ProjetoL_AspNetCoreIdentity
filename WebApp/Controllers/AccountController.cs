@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels.Account;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -16,10 +18,12 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -51,10 +55,12 @@ namespace WebApp.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel viewModel)
         {
             // Validar modelo
@@ -74,10 +80,15 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied() => View();
     }
 }

@@ -16,7 +16,8 @@ namespace WebApp.Controllers
             _context = context;
         }
 
-        // GET: Alunos
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return _context.Alunos != null ?
@@ -24,7 +25,8 @@ namespace WebApp.Controllers
                         Problem("Entity set 'DataContext.Alunos' is null.");
         }
 
-        // GET: Alunos/Details/5
+        [HttpGet]
+        [Authorize(Policy = "RequireUserManagerAdminRole")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Alunos == null)
@@ -42,17 +44,16 @@ namespace WebApp.Controllers
             return View(aluno);
         }
 
-        // GET: Alunos/Create
+        [HttpGet]
+        [Authorize(Policy = "RequireUserManagerAdminRole")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Alunos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "RequireUserManagerAdminRole")]
         public async Task<IActionResult> Create([Bind("Id,Nome,Email,Idade,Curso")] Aluno aluno)
         {
             if (ModelState.IsValid)
@@ -64,7 +65,8 @@ namespace WebApp.Controllers
             return View(aluno);
         }
 
-        // GET: Alunos/Edit/5
+        [HttpGet]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Alunos == null)
@@ -80,11 +82,8 @@ namespace WebApp.Controllers
             return View(aluno);
         }
 
-        // POST: Alunos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Idade,Curso")] Aluno aluno)
         {
             if (id != aluno.Id)
@@ -115,7 +114,8 @@ namespace WebApp.Controllers
             return View(aluno);
         }
 
-        // GET: Alunos/Delete/5
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Alunos == null)
@@ -133,9 +133,8 @@ namespace WebApp.Controllers
             return View(aluno);
         }
 
-        // POST: Alunos/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Alunos == null)

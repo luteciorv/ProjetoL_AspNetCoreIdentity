@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Context;
+using WebApp.Extensions;
+using WebApp.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireUserManagerAdminRole",
+        policy => policy.RequireRole("User", "Manager", "Admin"));
+});
+
+// Injeção de dependência
+builder.Services.AddScoped<ISeedDatabase, SeedDatabase>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,6 +57,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+await app.SeedDatabase();
 
 app.UseAuthentication();
 app.UseAuthorization();
