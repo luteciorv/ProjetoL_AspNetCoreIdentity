@@ -1,0 +1,56 @@
+﻿@model RoleEdit
+
+<h1 class="bg-info text-white">Editar perfil</h1>
+<a asp-action="Index" class="btn btn-secondary">Retornar</a>
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Update" method="post">
+    <input type="hidden" name="roleName" value="@Model.Role.Name" />
+    <input type="hidden" name="roleId" value="@Model.Role.Id" />
+
+    <h2 class="bg-info p-1 text-white">Incluir ao perfil: @Model.Role.Name</h2>
+    <table class="table table-bordered table-sm">
+        @if(Model.NonMembers.Count() == 0)
+        {
+            <tr>
+                <td colspan="2">Todos os usuários cadastrados no sistema pertencem a este perfil</td>
+            </tr>
+        }
+        else
+        {
+            @foreach(var user in Model.NonMembers)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>
+                        <input type="checkbox" name="AddIds" value="@user.Id"/>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+
+    <h2 class="bg-info p-1 text-white">Remover do perfil: @Model.Role.Name</h2>
+    <table class="table table-bordered table-sm">
+        @if (Model.Members.Count() == 0)
+        {
+            <tr>
+                <td colspan="2">Nenhum usuário cadastrado no sistema pertence a este perfil</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var user in Model.Members)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>
+                        <input type="checkbox" name="DeleteIds" value="@user.Id" />
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+
+    <input type="submit" class="btn btn-primary" value="Salvar alterações" />
+</form>
