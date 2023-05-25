@@ -4,5 +4,7 @@
     {
         Task SeedRolesAsync();
         Task SeedUsersAsync();
+
+        Task SeedUsersClaimsAsync();
     }
 }

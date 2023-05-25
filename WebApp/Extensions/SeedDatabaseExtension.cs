@@ -18,6 +18,7 @@ namespace WebApp.Extensions
 
             await service.SeedRolesAsync();
             await service.SeedUsersAsync();
+            await service.SeedUsersClaimsAsync();
         }
     }
 }

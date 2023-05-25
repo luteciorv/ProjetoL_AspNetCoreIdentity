@@ -33,10 +33,22 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
     });
 
+// Autorização baseada em Roles
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireUserManagerAdminRole",
         policy => policy.RequireRole("User", "Manager", "Admin"));
+});
+
+// Autorização baseada em Claims
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IsAdminClaimAccess", policy =>
+    {
+        policy.RequireClaim("CadastradoEm");
+        policy.RequireClaim("IsAdmin", "true");
+    });
+    options.AddPolicy("IsEmployeeClaimAccess", policy => policy.RequireClaim("IsEmployee", "true"));
 });
 
 // Injeção de dependência

@@ -10,6 +10,7 @@ namespace WebApp.Context
         { }
 
         public DbSet<Aluno> Alunos { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +23,15 @@ namespace WebApp.Context
                     Email = "lutecirov@gmail.com",
                     Idade = 23,
                     Curso = "Matemática"
+                }
+            );
+
+            modelBuilder.Entity<Produto>().HasData(
+                new Produto
+                {
+                    Id = 1,
+                    Nome = "Livro",
+                    Preco = 57.50m
                 }
             );
         }
