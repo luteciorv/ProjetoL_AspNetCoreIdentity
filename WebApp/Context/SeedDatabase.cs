@@ -72,6 +72,7 @@ namespace WebApp.Context
 
         public async Task SeedUsersClaimsAsync()
         {
+            // Administrador
             var userAdmin = 
                 await _userManager.FindByEmailAsync("admin@localhost") ?? 
                 throw new Exception($"O usuário com o e-mail admin@localhost não existe no sistema.");
@@ -96,11 +97,21 @@ namespace WebApp.Context
                     throw new Exception($"Não foi possível adicionar a Claim com o nome {claimName} ao usuário de e-mail {userAdmin.Email}.");
             }
 
+            // Usuário
             var user =
                await _userManager.FindByEmailAsync("user@localhost") ??
                throw new Exception($"O usuário com o e-mail user@localhost não existe no sistema.");
 
             claims = (await _userManager.GetClaimsAsync(user)).Select(c => c.Type);
+
+            claimName = "CadastradoEm";
+            if (!claims.Contains(claimName))
+            {
+                var newClaim = new Claim(claimName, "01/01/2020");
+                var result = await _userManager.AddClaimAsync(user, newClaim);
+                if (!result.Succeeded)
+                    throw new Exception($"Não foi possível adicionar a Claim com o nome {claimName} ao usuário de e-mail {user.Email}.");
+            }
 
             claimName = "IsAdmin";
             if (!claims.Contains(claimName))
@@ -118,6 +129,31 @@ namespace WebApp.Context
                 var result = await _userManager.AddClaimAsync(user, newClaim);
                 if (!result.Succeeded)
                     throw new Exception($"Não foi possível adicionar a Claim com o nome {claimName} ao usuário de e-mail {user.Email}.");
+            }
+
+            // Gerente
+            var userManager =
+               await _userManager.FindByEmailAsync("manager@localhost") ??
+               throw new Exception($"O usuário com o e-mail manager@localhost não existe no sistema.");
+
+            claims = (await _userManager.GetClaimsAsync(userManager)).Select(c => c.Type);
+
+            claimName = "CadastradoEm";
+            if (!claims.Contains(claimName))
+            {
+                var newClaim = new Claim(claimName, "03/03/2021");
+                var result = await _userManager.AddClaimAsync(userManager, newClaim);
+                if (!result.Succeeded)
+                    throw new Exception($"Não foi possível adicionar a Claim com o nome {claimName} ao usuário de e-mail {userManager.Email}.");
+            }           
+
+            claimName = "IsEmployee";
+            if (!claims.Contains(claimName))
+            {
+                var newClaim = new Claim(claimName, "true");
+                var result = await _userManager.AddClaimAsync(userManager, newClaim);
+                if (!result.Succeeded)
+                    throw new Exception($"Não foi possível adicionar a Claim com o nome {claimName} ao usuário de e-mail {userManager.Email}.");
             }
         }
     }

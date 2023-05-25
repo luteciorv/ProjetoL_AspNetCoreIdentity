@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Context;
 using WebApp.Extensions;
 using WebApp.Interfaces;
+using WebApp.Policies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,11 +51,14 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim("IsAdmin", "true");
     });
     options.AddPolicy("IsEmployeeClaimAccess", policy => policy.RequireClaim("IsEmployee", "true"));
+
+    // Política de claims personalizada
+    options.AddPolicy("TempoCadastroMinimo", policy => policy.Requirements.Add(new TempoCadastroRequirement(4)));
 });
 
 // Injeção de dependência
 builder.Services.AddScoped<ISeedDatabase, SeedDatabase>();
-
+builder.Services.AddScoped<IAuthorizationHandler, TempoCadastroHandler>();
 
 var app = builder.Build();
 

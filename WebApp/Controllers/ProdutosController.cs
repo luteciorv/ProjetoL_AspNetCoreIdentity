@@ -26,7 +26,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "IsEmployeeClaimAccess")]
+        [Authorize(Policy = "TempoCadastroMinimo")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Produtos == null)
@@ -45,7 +45,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "IsEmployeeClaimAccess")]
+        [Authorize(Policy = "TempoCadastroMinimo")]
         public IActionResult Create()
         {
             return View();
