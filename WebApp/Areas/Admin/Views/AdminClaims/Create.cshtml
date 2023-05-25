@@ -1,0 +1,18 @@
+﻿<h1 class="bg-info text-white">Cadastrar nova reinvidicação</h1>
+
+<a asp-action="Index" class="btn btn-outline-dark">Retornar</a>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div>
+        <label for="claimType">Tipo da reinvidicação:</label>
+        <input name="claimType" class="form-control" />
+    </div>
+    <div>
+        <label for="claimValue">Valor da reinvidicação:</label>
+        <input name="claimValue" class="form-control" />
+    </div>
+
+    <input type="submit" class="btn btn-primary mt-2" value="Cadastrar reinvidicação"/>
+</form>
