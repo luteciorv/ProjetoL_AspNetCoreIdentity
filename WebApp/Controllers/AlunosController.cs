@@ -2,6 +2,7 @@
 using AspNetCoreIdentity.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace WebApp.Controllers
 {
@@ -9,11 +10,29 @@ namespace WebApp.Controllers
     [Authorize]
     public class AlunosController : Controller
     {
-        [Route(""), HttpGet]
-        [AllowAnonymous]
-        public ActionResult Index([FromServices] IStudentService _studentService) =>
-            View(_studentService.GetAll());
+        private readonly HttpClient _client;
 
+        public AlunosController(HttpClient client, [FromServices] IConfiguration configuration)
+        {
+            _client = client;
+            _client.BaseAddress = new Uri(configuration["WebApiUri:Students"]);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> Index()
+        {          
+            using var response = await _client.GetAsync(_client.BaseAddress);
+            if (!response.IsSuccessStatusCode)
+            {
+                ModelState.AddModelError(string.Empty, "Mensagem muito foda de erro");
+                return View(Enumerable.Empty<ReadStudentDto>());
+            }
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+            var students = JsonConvert.DeserializeObject<IEnumerable<ReadStudentDto>>(apiResponse);
+            return View(students);
+        }
 
         [Route("detalhes/{id}"), HttpGet]
         [Authorize(Policy = "RequireUserManagerAdminRole")]
@@ -55,7 +74,7 @@ namespace WebApp.Controllers
             if (!ModelState.IsValid)
                 return View(studentDto);
 
-            await studentService.UpdateAsync(studentDto);
+            await studentService.UpdateAsync(new Guid(), studentDto);
             return RedirectToAction(nameof(Index));
         }
 

@@ -12,6 +12,8 @@ using WebApp.Extensions;
 using WebApp.Policies;
 using System.Reflection;
 using AspNetCoreIdentity.Application.Profiles;
+using WebApp.Controllers;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +65,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 // Injeção de dependência
+builder.Services.AddHttpClient<AlunosController>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ISeedDatabase, SeedDatabase>();

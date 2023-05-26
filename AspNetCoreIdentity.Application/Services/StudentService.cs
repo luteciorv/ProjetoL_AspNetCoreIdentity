@@ -17,19 +17,22 @@ namespace AspNetCoreIdentity.Application.Services
             _mapper = mapper;
         }
 
-        public async Task CreateAsync(CreateStudentDto studentDto)
+        public async Task<ReadStudentDto> CreateAsync(CreateStudentDto studentDto)
         {          
             var student = _mapper.Map<Student>(studentDto);
             _unitOfWork.StudentRepository.Add(student);
             await _unitOfWork.CommitAsync();
+
+            return _mapper.Map<ReadStudentDto>(student);
         }
 
         public async Task DeleteById(Guid id)
         {
-            var student = await GetByIdAsync(id);
-            if (student is null)
+            var readStudentDto = await GetByIdAsync(id);
+            if (readStudentDto is null)
                 return;
 
+            var student = _mapper.Map<Student>(readStudentDto);
             _unitOfWork.StudentRepository.Delete(student);
             await _unitOfWork.CommitAsync();
         }
@@ -40,8 +43,11 @@ namespace AspNetCoreIdentity.Application.Services
             return _mapper.Map<IEnumerable<ReadStudentDto>>(students);
         }
 
-        public async Task<Student?> GetByIdAsync(Guid id) =>
-            await _unitOfWork.StudentRepository.GetByIdAsync(id);
+        public async Task<ReadStudentDto?> GetByIdAsync(Guid id)
+        {
+            var student = await _unitOfWork.StudentRepository.GetByIdAsync(id);
+            return _mapper.Map<ReadStudentDto>(student);
+        }
 
         public async Task<DetailsStudentDto> GetDetailsByIdAsync(Guid id)
         {
@@ -61,10 +67,14 @@ namespace AspNetCoreIdentity.Application.Services
             return _mapper.Map<DeleteStudentDto>(student);
         }
 
-        public async Task UpdateAsync(EditStudentDto studentDto)
+        public async Task UpdateAsync(Guid id, EditStudentDto studentDto)
         {
-            var student = _mapper.Map<Student>(studentDto);
-            _unitOfWork.StudentRepository.Update(student);
+            var student = await _unitOfWork.StudentRepository.GetByIdAsync(id);
+            if (student is null)
+                return;
+
+            var updatedStudant = _mapper.Map(studentDto, student);
+            _unitOfWork.StudentRepository.Update(updatedStudant);
             await _unitOfWork.CommitAsync();
         }
     }
