@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreIdentity.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Context;
-using WebApp.Entities;
 
 namespace WebApp.Controllers
 {
@@ -20,21 +19,22 @@ namespace WebApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return _context.Produtos != null ?
-                        View(await _context.Produtos.ToListAsync()) :
-                        Problem("Entity set 'DataContext.Produtos' is null.");
+            return _context.Products != null ?
+                        View(await _context.Products.ToListAsync()) :
+                        Problem("Entity set 'DataContext.Products' is null.");
         }
 
+        /*
         [HttpGet]
         [Authorize(Policy = "TempoCadastroMinimo")]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Produtos == null)
+            if (id == null || _context.Products == null)
             {
                 return NotFound();
             }
 
-            var produto = await _context.Produtos
+            var produto = await _context.Products
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (produto == null)
             {
@@ -54,7 +54,7 @@ namespace WebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "IsEmployeeClaimAccess")]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Preco")] Produto produto)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Preco")] Product produto)
         {
             if (ModelState.IsValid)
             {
@@ -69,12 +69,12 @@ namespace WebApp.Controllers
         [Authorize(Policy = "IsAdminClaimAccess")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Produtos == null)
+            if (id == null || _context.Products == null)
             {
                 return NotFound();
             }
 
-            var produto = await _context.Produtos.FindAsync(id);
+            var produto = await _context.Products.FindAsync(id);
             if (produto == null)
             {
                 return NotFound();
@@ -84,7 +84,7 @@ namespace WebApp.Controllers
 
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Policy = "IsAdminClaimAccess")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Preco")] Produto produto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Preco")] Product produto)
         {
             if (id != produto.Id)
             {
@@ -118,12 +118,12 @@ namespace WebApp.Controllers
         [Authorize(Policy = "IsAdminClaimAccess")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Produtos == null)
+            if (id == null || _context.Products == null)
             {
                 return NotFound();
             }
 
-            var produto = await _context.Produtos
+            var produto = await _context.Products
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (produto == null)
             {
@@ -137,14 +137,14 @@ namespace WebApp.Controllers
         [Authorize(Policy = "IsAdminClaimAccess")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Produtos == null)
+            if (_context.Products == null)
             {
-                return Problem("Entity set 'DataContext.Produtos' is null.");
+                return Problem("Entity set 'DataContext.Products' is null.");
             }
-            var produto = await _context.Produtos.FindAsync(id);
+            var produto = await _context.Products.FindAsync(id);
             if (produto != null)
             {
-                _context.Produtos.Remove(produto);
+                _context.Products.Remove(produto);
             }
 
             await _context.SaveChangesAsync();
@@ -155,5 +155,6 @@ namespace WebApp.Controllers
         {
             return (_context.Produtos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+        */
     }
 }

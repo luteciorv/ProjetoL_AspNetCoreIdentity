@@ -1,4 +1,4 @@
-﻿using WebApp.Interfaces;
+﻿using AspNetCoreIdentity.Infrastructure.Interfaces;
 
 namespace WebApp.Extensions
 {
@@ -17,7 +17,7 @@ namespace WebApp.Extensions
                 throw new Exception($"Ocorreu um erro ao recuperar o serviço do {nameof(ISeedDatabase)}.");
 
             await service.SeedRolesAsync();
-            await service.SeedUsersAsync();
+            await service.SeedUsersRolesAsync();
             await service.SeedUsersClaimsAsync();
         }
     }

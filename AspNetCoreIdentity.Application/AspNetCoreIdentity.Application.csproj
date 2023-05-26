@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AspNetCoreIdentity.Domain\AspNetCoreIdentity.Domain.csproj" />
+    <ProjectReference Include="..\AspNetCoreIdentity.Infrastructure\AspNetCoreIdentity.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

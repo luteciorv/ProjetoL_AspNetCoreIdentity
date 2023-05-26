@@ -1,30 +1,25 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreIdentity.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Context;
-using WebApp.Entities;
 
 namespace WebApp.Controllers
 {
     [Authorize]
     public class AlunosController : Controller
     {
-        private readonly DataContext _context;
-
-        public AlunosController(DataContext context)
-        {
-            _context = context;
-        }
-
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public IActionResult Index([FromServices] IStudentService _studentService)
         {
-            return _context.Alunos != null ?
-                        View(await _context.Alunos.ToListAsync()) :
-                        Problem("Entity set 'DataContext.Alunos' is null.");
+            var students = _studentService.GetAll();
+            if (students is null)
+                Problem("Nenhum aluno cadastrado no sistema");
+
+            return View(students);
         }
 
+        /*
         [HttpGet]
         [Authorize(Policy = "RequireUserManagerAdminRole")]
         public async Task<IActionResult> Details(int? id)
@@ -54,7 +49,7 @@ namespace WebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "RequireUserManagerAdminRole")]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Email,Idade,Curso")] Aluno aluno)
+        public async Task<IActionResult> Create([Bind("Id,Nome,Email,Idade,Curso")] Student aluno)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +79,7 @@ namespace WebApp.Controllers
 
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager, Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Idade,Curso")] Aluno aluno)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Idade,Curso")] Student aluno)
         {
             if (id != aluno.Id)
             {
@@ -155,5 +150,6 @@ namespace WebApp.Controllers
         {
             return (_context.Alunos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+        */
     }
 }

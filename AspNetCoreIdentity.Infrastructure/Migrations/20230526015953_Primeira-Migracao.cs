@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WebApp.Migrations
+namespace AspNetCoreIdentity.Infrastructure.Migrations
 {
-    public partial class Identity_AdicaoTabelas_Padroes : Migration
+    public partial class PrimeiraMigracao : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,34 @@ namespace WebApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
+                    Course = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,6 +182,28 @@ namespace WebApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "Name", "Price" },
+                values: new object[,]
+                {
+                    { new Guid("2b97219a-c75f-4e0f-8a02-a20b4d8755e2"), "Bola de vôlei - Penalt", 175.90m },
+                    { new Guid("d61a8c21-2487-4c7f-9e09-7a18b58724ff"), "Barbeador", 94.75m },
+                    { new Guid("e0fad24f-3406-491f-b5fe-b8d43fe5cac1"), "Pilha recarregável AA", 25.00m },
+                    { new Guid("edc413ab-95a6-469c-ba3c-d1e4f59e7f61"), "Kit Travesseiro", 250.99m }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Students",
+                columns: new[] { "Id", "Age", "Course", "Email", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("18432c35-4742-4d4a-9b7b-15c4bcfd7697"), 10, "Sem curso", "lucas@gmail.com", "Lucas" },
+                    { new Guid("52b480a8-bbec-43e8-81e1-4d190ef92105"), 23, "Matemática", "pedro@gmail.com", "Pedro" },
+                    { new Guid("dbe4d8ac-1da0-44e6-b832-4d817f2ce312"), 17, "Português", "amanda@gmail.com", "Amanda" },
+                    { new Guid("ec916662-0b70-40da-b361-1b0539eaf5a8"), 31, "Artes", "beatriz@gmail.com", "Beatriz" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -210,6 +260,12 @@ namespace WebApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Students");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

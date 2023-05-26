@@ -1,10 +1,14 @@
+using AspNetCoreIdentity.Application.Services;
+using AspNetCoreIdentity.Domain.Interfaces.Repositories;
+using AspNetCoreIdentity.Domain.Interfaces.Services;
+using AspNetCoreIdentity.Infrastructure.Data;
+using AspNetCoreIdentity.Infrastructure.Interfaces;
+using AspNetCoreIdentity.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Context;
 using WebApp.Extensions;
-using WebApp.Interfaces;
 using WebApp.Policies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +61,8 @@ builder.Services.AddAuthorization(options =>
 });
 
 // Injeção de dependência
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ISeedDatabase, SeedDatabase>();
 builder.Services.AddScoped<IAuthorizationHandler, TempoCadastroHandler>();
 
@@ -75,7 +81,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-await app.SeedDatabase();
+//await app.SeedDatabase();
 
 app.UseAuthentication();
 app.UseAuthorization();

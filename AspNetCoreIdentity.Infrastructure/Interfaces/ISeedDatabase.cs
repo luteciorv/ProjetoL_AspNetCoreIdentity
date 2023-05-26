@@ -1,10 +1,9 @@
-﻿namespace WebApp.Interfaces
+﻿namespace AspNetCoreIdentity.Infrastructure.Interfaces
 {
     public interface ISeedDatabase
     {
         Task SeedRolesAsync();
-        Task SeedUsersAsync();
-
+        Task SeedUsersRolesAsync();
         Task SeedUsersClaimsAsync();
     }
 }
