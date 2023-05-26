@@ -7,6 +7,6 @@ namespace AspNetCoreIdentity.Domain.Interfaces.Repositories
         IRepository<Student> StudentRepository { get; }
         IRepository<Product> ProductRepository { get; }
 
-        void Commit();
+        Task CommitAsync();
     }
 }

@@ -1,6 +1,6 @@
 using AspNetCoreIdentity.Application.Services;
 using AspNetCoreIdentity.Domain.Interfaces.Repositories;
-using AspNetCoreIdentity.Domain.Interfaces.Services;
+using AspNetCoreIdentity.Application.Interfaces.Services;
 using AspNetCoreIdentity.Infrastructure.Data;
 using AspNetCoreIdentity.Infrastructure.Interfaces;
 using AspNetCoreIdentity.Infrastructure.Repositories;
@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Extensions;
 using WebApp.Policies;
+using System.Reflection;
+using AspNetCoreIdentity.Application.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +67,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ISeedDatabase, SeedDatabase>();
 builder.Services.AddScoped<IAuthorizationHandler, TempoCadastroHandler>();
+builder.Services.AddAutoMapper(typeof(StudentProfile));
 
 var app = builder.Build();
 
@@ -81,7 +84,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//await app.SeedDatabase();
+await app.SeedDatabase();
 
 app.UseAuthentication();
 app.UseAuthorization();

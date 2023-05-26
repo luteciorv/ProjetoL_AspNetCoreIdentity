@@ -30,7 +30,7 @@ namespace AspNetCoreIdentity.Infrastructure.Repositories
 
         public UnitOfWork(DataContext dataContext) => _dataContext = dataContext;
 
-        public void Commit() => _dataContext.SaveChanges();
+        public async Task CommitAsync() => await _dataContext.SaveChangesAsync();
 
         private bool _disposed = false;
         public virtual void Dispose(bool disposing)

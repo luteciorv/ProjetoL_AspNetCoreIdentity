@@ -1,12 +1,10 @@
-﻿@model AspNetCoreIdentity.Domain.Entities.Student
+﻿@model AspNetCoreIdentity.Application.DTOs.Student.CreateStudentDto
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Cadastrar";
 }
 
-<h1>Create</h1>
-
-<h4>Aluno</h4>
+<h1>Cadastrar novo aluno</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -33,14 +31,14 @@
                 <span asp-validation-for="Course" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Cadastrar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Retornar à listagem de alunos</a>
 </div>
 
 @section Scripts {

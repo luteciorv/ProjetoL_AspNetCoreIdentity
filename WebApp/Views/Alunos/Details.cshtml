@@ -1,42 +1,44 @@
-﻿@model AspNetCoreIdentity.Domain.Entities.Student
+﻿@model AspNetCoreIdentity.Application.DTOs.Student.DetailsStudentDto
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes";
 }
 
-<h1>Details</h1>
+<h2>Detalhes do aluno</h2>
+<hr />
 
 <div>
-    <h4>Aluno</h4>
-    <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            <label asp-for="Name" class="form-label"></label>
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            <input disabled asp-for="Name" class="form-control" />
         </dd>
+
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
+            <label asp-for="Email" class="form-label"></label>
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
+            <input disabled asp-for="Email" class="form-control" />
         </dd>
+
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Age)
+            <label asp-for="Age" class="form-label"></label>
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Age)
+            <input disabled asp-for="Age" class="form-control" />
         </dd>
+
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Course)
+            <label asp-for="Course" class="form-label"></label>
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Course)
+            <input disabled asp-for="Course" class="form-control" />
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
+    <a asp-action="Index">Retornar à listagem de alunos</a>
 </div>

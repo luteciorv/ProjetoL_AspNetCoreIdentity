@@ -14,14 +14,26 @@ namespace AspNetCoreIdentity.Domain.Interfaces.Repositories
             _dbSet = _dataContext.Set<TEntity>();
         }
 
-        public void Add(TEntity entity) => _dbSet.Add(entity);
+        public void Add(TEntity entity)
+        {
+            _dataContext.Attach(entity);
+            _dataContext.Entry(entity).State = EntityState.Added;
+        }
 
-        public void Delete(TEntity entity) => _dbSet.Remove(entity);
+        public void Delete(TEntity entity)
+        {
+            _dataContext.Attach(entity);
+            _dataContext.Entry(entity).State = EntityState.Deleted;
+        }
 
-        public IEnumerable<TEntity> GetAll() => _dbSet.AsEnumerable();
+        public IEnumerable<TEntity> GetAll() => _dbSet.AsNoTracking().AsEnumerable();
 
-        public TEntity? GetById(string id) => _dbSet.Find(id);
+        public async Task<TEntity?> GetByIdAsync(Guid id) => await _dbSet.FindAsync(id);
 
-        public void Update(TEntity entity) => _dbSet.Update(entity);  
+        public void Update(TEntity entity)
+        {
+            _dataContext.Attach(entity);
+            _dataContext.Entry(entity).State = EntityState.Modified;
+        }
     }
 }

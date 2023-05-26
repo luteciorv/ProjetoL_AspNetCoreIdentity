@@ -1,155 +1,83 @@
-﻿using AspNetCoreIdentity.Domain.Interfaces.Services;
+﻿using AspNetCoreIdentity.Application.DTOs.Student;
+using AspNetCoreIdentity.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Controllers
 {
+    [Route("alunos")]
     [Authorize]
     public class AlunosController : Controller
     {
-        [HttpGet]
+        [Route(""), HttpGet]
         [AllowAnonymous]
-        public IActionResult Index([FromServices] IStudentService _studentService)
-        {
-            var students = _studentService.GetAll();
-            if (students is null)
-                Problem("Nenhum aluno cadastrado no sistema");
+        public ActionResult Index([FromServices] IStudentService _studentService) =>
+            View(_studentService.GetAll());
 
-            return View(students);
-        }
 
-        /*
-        [HttpGet]
+        [Route("detalhes/{id}"), HttpGet]
         [Authorize(Policy = "RequireUserManagerAdminRole")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Alunos == null)
-            {
-                return NotFound();
-            }
+        public async Task<ActionResult> Details(Guid id, [FromServices] IStudentService studentService) =>
+            View(await studentService.GetDetailsByIdAsync(id));
 
-            var aluno = await _context.Alunos
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (aluno == null)
-            {
-                return NotFound();
-            }
 
-            return View(aluno);
-        }
-
-        [HttpGet]
+        [Route("cadastrar"), HttpGet]
         [Authorize(Policy = "RequireUserManagerAdminRole")]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public ActionResult Create() => View();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Route("cadastrar"), HttpPost, ValidateAntiForgeryToken]
         [Authorize(Policy = "RequireUserManagerAdminRole")]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Email,Idade,Curso")] Student aluno)
+        public async Task<ActionResult> Create(CreateStudentDto studentDto, [FromServices] IStudentService studentService)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(aluno);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(aluno);
-        }
+            if (!ModelState.IsValid)
+                return View(studentDto);
 
-        [HttpGet]
-        [Authorize(Roles = "Manager, Admin")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Alunos == null)
-            {
-                return NotFound();
-            }
-
-            var aluno = await _context.Alunos.FindAsync(id);
-            if (aluno == null)
-            {
-                return NotFound();
-            }
-            return View(aluno);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Roles = "Manager, Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Idade,Curso")] Student aluno)
-        {
-            if (id != aluno.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(aluno);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AlunoExists(aluno.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(aluno);
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Alunos == null)
-            {
-                return NotFound();
-            }
-
-            var aluno = await _context.Alunos
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (aluno == null)
-            {
-                return NotFound();
-            }
-
-            return View(aluno);
-        }
-
-        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Alunos == null)
-            {
-                return Problem("Entity set 'DataContext.Alunos'  is null.");
-            }
-            var aluno = await _context.Alunos.FindAsync(id);
-            if (aluno != null)
-            {
-                _context.Alunos.Remove(aluno);
-            }
-
-            await _context.SaveChangesAsync();
+            await studentService.CreateAsync(studentDto);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AlunoExists(int id)
+
+        [Route("editar/{id}"), HttpGet]
+        [Authorize(Roles = "Manager, Admin")]
+        public async Task<ActionResult> Edit(Guid id, [FromServices] IStudentService studentService)
         {
-            return (_context.Alunos?.Any(e => e.Id == id)).GetValueOrDefault();
+            var student = await studentService.GetEditByIdAsync(id);
+            if (student is null)
+                return NotFound();
+
+            return View(student);
         }
-        */
+
+        [Route("editar/{id}"), HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager, Admin")]
+        public async Task<ActionResult> Edit(EditStudentDto studentDto, [FromServices] IStudentService studentService)
+        {
+            if (!ModelState.IsValid)
+                return View(studentDto);
+
+            await studentService.UpdateAsync(studentDto);
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [Route("apagar/{id}"), HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete(Guid id, [FromServices] IStudentService studentService)
+        {
+            var student = await studentService.GetDeleteByIdAsync(id);        
+            if (student is null)
+                return NotFound();
+
+            return View(student);
+        }
+
+        [Route("apagar/{id}"), HttpPost, ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> DeleteConfirmed(Guid id, [FromServices] IStudentService studentService)
+        {
+            await studentService.DeleteById(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
